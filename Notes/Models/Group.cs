@@ -22,11 +22,13 @@ namespace Notes.Models
         /// The group's name.
         /// </summary>
         [Required]
+        [StringLength(60, ErrorMessage = "The name can only have 60 characters.")]
         public string Name { get; set; }
 
         /// <summary>
         /// An optional field, to describe this group and the notes within it.
         /// </summary>
+        [StringLength(255, ErrorMessage = "The description can only have 255 characters.")]
         public string Description { get; set; }
 
         /// <summary>

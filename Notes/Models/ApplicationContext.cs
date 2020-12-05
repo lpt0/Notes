@@ -27,6 +27,9 @@ namespace Notes.Models
 
         }
 
+        // link to the User class
+        public DbSet<User> Users { get; set; }
+
         /* This handles linking the note to the database (since its the only 
          * reference to the Note class */
         public DbSet<Note> Notes { get; set; }

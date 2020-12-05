@@ -25,6 +25,7 @@ namespace Notes.Models
         /// The note's name.
         /// </summary>
         [Required]
+        [StringLength(60, ErrorMessage = "The name can only have 60 characters.")]
         public string Name { get; set; }
 
         /// <summary>
@@ -36,7 +37,19 @@ namespace Notes.Models
         /// <summary>
         /// An optional, brief description of this note.
         /// </summary>
+        [StringLength(255, ErrorMessage = "The description can only have 255 characters.")]
         public string Description { get; set; }
+
+        /// <summary>
+        /// The User ID associated with this note.
+        /// </summary>
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+
+        /// <summary>
+        /// The user that created the note.
+        /// </summary>
+        public User User { get; set; }
 
         /* Having a separate property for the group ID (instead of a 
          * "shadow foreign key", or one that is automatically generated)
