@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Notes.Models.User>
+
+@{
+    /** TODO */
+    ViewData["Title"] = "All users";
+}
+
+<h1>All users</h1>
+<p>Click on a username to be taken to a list of their notes.</p>
+
+<p>
+    <a asp-action="Create">Create a new user</a>
+</p>
+<!-- Change colour on hover, like notes table -->
+<table class="table table-hover">
+    <!-- Dark header to make the site uniform -->
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <!-- Again, username should link to details page -->
+                <a class="table-anchor" asp-controller="Users" asp-action="Details" asp-route-id="@item.Id">
+                    @Html.DisplayFor(modelItem => item.Username)
+                </a>
+            </td>
+            <!-- Users cannot be edited/deleted like most sites (except by special request, i.e. GDPR compliance) -->
+        </tr>
+}
+    </tbody>
+</table>

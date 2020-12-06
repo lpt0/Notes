@@ -1,0 +1,74 @@
+﻿@model Notes.Models.User
+
+@{
+    /** TODO */
+    // use the user's username within the title
+    ViewData["Title"] = $"{Model.Username}'s notes";
+}
+
+<!-- Same as the title -->
+<h1>@ViewData["Title"]</h1>
+
+<!-- Use a table to show all of this user's notes, like Notes/Index.cshtml;
+     this table was brought over from there -->
+<div>
+    <table class="table table-hover">
+        <!-- Table header -->
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    <!-- Use the column name directly, since it may not be
+                         possible to get the name from the model (as there
+                         may be no notes available) -->
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <!-- No need for "Created By", since this is on a user's page, only their notes will be shown -->
+                <th>
+                    Group
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <!-- Go through and show all notes in the database; the HTML elements will be repeated for *every* note -->
+        <tbody>
+            @foreach (var item in Model.Notes)
+            {
+                <tr>
+                    <td>
+                        <!-- Link the note name to the view page for that note -->
+                        <a class="table-anchor" asp-controller="Notes" asp-action="Details" asp-route-id="@item.Id">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <!-- Again, not showing content since it can be long -->
+                    <td>
+                        <!-- A link to the group, if it exists -->
+                        @if (item.GroupId != null)
+                        {
+                            <a asp-controller="Groups" asp-action="Details" asp-route-id="@item.GroupId">
+                                @Html.DisplayFor(modelItem => item.Group.Name)
+                            </a>
+                        }
+                    </td>
+                    <td>
+                        <!-- A link to view the note, edit it, or delete it -->
+                        <!-- TODO - buttons -->
+                        <a class="btn btn-outline-primary" asp-controller="Notes" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-outline-danger" asp-controller="Notes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<div>
+    <!-- Users are not able to edit their own usernames -->
+    <a asp-action="Index">Back to List</a>
+</div>

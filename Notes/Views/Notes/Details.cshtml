@@ -1,0 +1,48 @@
+﻿@model Notes.Models.Note
+
+@{
+    /** TODO */
+    // use the model name and author as the title
+    ViewData["Title"] = $"{Model.Name} by {Model.User.Username}";
+}
+
+<!-- Just the note name as the title -->
+<h1>@Model.Name</h1> <!-- TODO: Show edit button -->
+<!-- And display the username right under that, with a link to the user,
+     using asp attributes to build the href attribute -->
+<h6>by <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.User.Id">@Model.User.Username</a></h6>
+<!-- TODO: Display collection name if present -->
+@{
+    // If present, display the group along with a link to that group's page (which shows all notes contained within it)
+    if (Model.GroupId != null)
+    {
+        <a asp-controller="Groups" asp-action="Details" asp-route-id="@Model.GroupId">
+            @Model.Group.Name
+        </a>
+    }
+}
+<div>
+    <!-- No need to show note name here since it is above -->
+    @{
+        // only show the description if it exists
+        if (Model.Description != null && !Model.Description.Equals(""))
+        {
+            <h5>Description</h5>
+            <p>
+                @Html.DisplayFor(model => model.Description)
+            </p>
+        }
+    }
+    <!-- A line to separate the details from the actual content -->
+    <hr />
+    <!-- Using the `pre` element, as that will display the text with the formatting and newlines intact -->
+    <pre class="note-content">
+            @Html.DisplayFor(model => model.Content)
+        </pre>
+    <!-- And a line to show that this is the end of the content -->
+    <hr />
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
