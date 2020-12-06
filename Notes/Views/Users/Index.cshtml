@@ -19,6 +19,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.Username)
             </th>
+            <th>
+                <!-- Another column for the number of notes -->
+                Number of Notes
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -29,6 +33,10 @@
                 <a class="table-anchor" asp-controller="Users" asp-action="Details" asp-route-id="@item.Id">
                     @Html.DisplayFor(modelItem => item.Username)
                 </a>
+            </td>
+            <td>
+                <!-- Show the number of notes that this user has created -->
+                @Html.DisplayFor(modelItem => item.Notes.Count)
             </td>
             <!-- Users cannot be edited/deleted like most sites (except by special request, i.e. GDPR compliance) -->
         </tr>

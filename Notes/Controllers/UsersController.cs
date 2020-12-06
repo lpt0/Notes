@@ -28,7 +28,9 @@ namespace Notes.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            /* include the notes in the query, so the number of notes created
+             * can be shown */
+            return View(await _context.Users.Include(m => m.Notes).ToListAsync());
         }
 
         // GET: Users/Details/5
@@ -41,6 +43,7 @@ namespace Notes.Controllers
 
             var user = await _context.Users
                 .Include(m => m.Notes) // load any notes for this user (if they exist)
+                .ThenInclude(n => n.Group) // and load any groups associated with the notes
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
