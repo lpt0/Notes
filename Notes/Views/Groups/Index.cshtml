@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Notes.Models.Group>
+
+@{
+    ViewData["Title"] = "All groups";
+}
+
+<h1>All groups</h1>
+<p>Click on a group name to view all notes associated with it.</p>
+<p>
+    <a asp-action="Create">Create a new group</a>
+</p>
+<!-- consistency is key; use a hover table and a dark header -->
+<table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                Number of Notes
+            </th>
+            <!-- Blank heading for actions -->
+            <!-- TODO -->
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <!-- Link to the group's details page -->
+                <a asp-controller="Groups" asp-action="Details" asp-route-id="@item.Id">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <!-- show the number of notes associated with this group -->
+                @Html.DisplayFor(modelItem => item.Notes.Count)
+            </td>
+            <td>
+                <!-- Again, consistency; use outline buttons -->
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

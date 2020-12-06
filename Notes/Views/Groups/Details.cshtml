@@ -1,0 +1,66 @@
+﻿@model Notes.Models.Group
+
+@{
+    /** TODO */
+    ViewData["Title"] = $"Notes under {Model.Name}";
+}
+
+<!-- Same heading as title -->
+<h1>@ViewData["Title"]</h1>
+
+<!-- Same table as Users/Details.cshtml -->
+<div>
+    <table class="table table-hover">
+        <!-- Table header -->
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <!-- Instead of showing the group, show who the note was created by -->
+                <th>
+                    Created by
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <!-- Go through and show all notes in the database; the HTML elements will be repeated for *every* note -->
+        <tbody>
+            @foreach (var item in Model.Notes)
+            {
+                <tr>
+                    <td>
+                        <!-- Link the note name to the view page for that note -->
+                        <a class="table-anchor" asp-controller="Notes" asp-action="Details" asp-route-id="@item.Id">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <!-- Again, not showing content since it can be long -->
+                    <td>
+                        <!-- Link back to the user that created this note -->
+                        <a asp-controller="Users" asp-action="Details" asp-route-id="@item.UserId">
+                            @Html.DisplayFor(modelItem => item.User.Username)
+                        </a>
+                    </td>
+                    <td>
+                        <!-- A link to view the note, edit it, or delete it -->
+                        <!-- TODO - buttons -->
+                        <a class="btn btn-outline-primary" asp-controller="Notes" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-outline-danger" asp-controller="Notes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
