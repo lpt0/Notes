@@ -56,7 +56,17 @@ namespace Notes.Controllers
         // GET: Notes/Create
         public IActionResult Create()
         {
+            // populate the group and user select lists
             ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name");
+            // if there are items in the list, prepend a blank item
+            if ((ViewData["GroupId"] as SelectList).Count() != 0)
+            {
+                // create the option itself, and have it be selected by default
+                SelectListItem option = new SelectListItem("", "", true);
+
+                // and prepend it
+                (ViewData["GroupId"] as SelectList).Prepend(option); //TODO
+            }
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Username");
             return View();
         }
@@ -68,11 +78,12 @@ namespace Notes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Content,Description,UserId,GroupId")] Note note)
         {
+            // inputted data is valid?
             if (ModelState.IsValid)
             {
-                _context.Add(note);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.Add(note); // add the note
+                await _context.SaveChangesAsync(); // wait for the database write to complete
+                return RedirectToAction(nameof(Index)); // send the user back to the note list
             }
             ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", note.GroupId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Username", note.UserId);
@@ -100,6 +111,8 @@ namespace Notes.Controllers
         // POST: Notes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Even though the UserId field is not modified, it still needs to be bound to
+        //TODO
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Content,Description,GroupId")] Note note)
@@ -113,7 +126,24 @@ namespace Notes.Controllers
             {
                 try
                 {
-                    _context.Update(note);
+                    // so, I had to get some help for this one
+                    // this stackoverflow answer helped me find the solution below: https://stackoverflow.com/a/35966721
+                    // from the way that answer explained it, it seems that the solution below may not be good performance-wise
+                    // this would require more research time, which I do not have right now
+                    // specify the fields to update in the database
+                    // workaround for ASP trying to modify the user id that doesn't exist on the passed model
+                    var entry = _context.Entry(note);
+
+                    /* only need to update the bound properties specified in 
+                     * the parameters
+                     * since the Id is the primary key, it cannot be updated
+                     */
+                    entry.Property(n => n.Name).IsModified = true;
+                    entry.Property(n => n.Description).IsModified = true;
+                    entry.Property(n => n.Content).IsModified = true;
+                    entry.Property(n => n.GroupId).IsModified = true;
+
+                    // since the properties being modified are specified, no need call update; just save
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -130,7 +160,7 @@ namespace Notes.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", note.GroupId);
-            // again, no user id since I don't want it to be edited
+            // again, no user id since I don't want it to be edited TODO
             return View(note);
         }
 
