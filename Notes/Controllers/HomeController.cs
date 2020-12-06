@@ -1,4 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/** HomeController.cs
+ * 
+ * TODO
+ * 
+ * Author: Haran
+ * Date: December 6th, 2020
+ */
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Notes.Models;
 using System;
@@ -18,6 +25,10 @@ namespace Notes.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// The index route handler.
+        /// </summary>
+        /// <returns>The `index` page view.</returns>
         public IActionResult Index()
         {
             return View();
@@ -28,6 +39,19 @@ namespace Notes.Controllers
             return View();
         }
 
+        /// <summary>
+        /// The about page route handler.
+        /// </summary>
+        /// <returns>The `about` page view.</returns>
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// The default error page handler.
+        /// </summary>
+        /// <returns>The error page view.</returns>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
