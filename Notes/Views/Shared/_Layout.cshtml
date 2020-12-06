@@ -1,36 +1,107 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+/** _Layout.cs
+ * 
+ * TODO
+ * 
+ * Author: Haran
+ * Date: December 4th, 2020
+ */
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    @{ 
+/* 
+    This Layout page renders acts as a sort of wrapper around other pages.
+    The best example I can give, is that it is similar to including/requiring other scripts in PHP.
+    With that example, the HTML in those pages are included as well - which means that it will be
+    printed alongside the PHP logic.
+    With this however, the basic layout for the site can be declared, and the `RenderBody` call
+    takes care of executing the other cshtml files. So this sort of acts like a wrapper
+    around the other views.
+*/
+    }
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Notes</title>
+    <!-- Some additional metadata about the site -->
+    <meta name="application-name" content="Notes" />
+    <meta name="author" content="Haran" />
+    <meta name="description" content="A simple note-taking application." />
+    <!-- The title, which is set by individual pages. -->
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- The `asp-append-version` attribute adds the checksum of the CSS file (at compile-time).
+         So, if the css file is changed during run-time, this will ensure that the most recent file
+         is served (essentially serving as a cache buster of sorts). 
+         This links to the CSS file under wwwroot/css/ -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Notes</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <!-- Top navigation bar, which holds just a link to the main index for now 
+              I like the look of the dark navbar, so that's why I picked it -->
+        <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark ">
+            <!-- Link to the home page using the ASP provided attributes -->
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <!-- The logo -->
+                <img src="~/img/logo.png" alt="Site Logo" height="32" width="32" /> 
+                Notes
+            </a>
         </nav>
+
+        <!-- Sidebar with links to the main pages -->
+        <nav class="sidebar bg-dark">
+            <!-- Using a heading tag to specify that this is a section -->
+            <h6>Notes</h6>
+            <ul class="links" id="notes">
+                <!-- The asp-controller and asp-action attributes allow me to
+                     specify the controller and route that this link should
+                     point to, without having to hardcode an href. -->
+                <li><a asp-controller="Notes" asp-action="Index">View Notes</a></li>
+                <li><a asp-controller="Notes" asp-action="Create">Create a Note</a></li>
+            </ul>
+
+            <h6>Users</h6>
+            <ul class="links" id="users">
+                <li><a asp-controller="Users" asp-action="Index">View Users</a></li>
+                <li><a asp-controller="Users" asp-action="Create">Create a User</a></li>
+            </ul>
+
+            <h6>Groups</h6>
+            <ul class="links" id="groups">
+                <li><a asp-controller="Groups" asp-action="Index">View Groups</a></li>
+                <li><a asp-controller="Groups" asp-action="Create">Create a Group</a></li>
+            </ul>
+        </nav>
+        <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Notes</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Index">View Notes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Groups" asp-action="Index">View Groups</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>-->
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <!-- The actual page contents. This means the pages under the controller folders (such as Home/Index.cshtml). -->
             @RenderBody()
         </main>
     </div>

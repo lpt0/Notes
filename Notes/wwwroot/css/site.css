@@ -1,71 +1,51 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+﻿/* Main content (everything outside of the header, navbars, and footer) */
+main {
+    padding: 1%; /* Add some space*/
 }
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+/* Sidebar formatting */
+.sidebar {
+    float: left; /* Set the sidebar to be to the left of the page */
+    width: 7%; /* And specify the width of the sidebar (anything bigger will wrap) */
+    padding-left: 0.5%; /* And add a bit of space between the edge of the screen */
+    display: flex; /* Use a flexbox for the sidebar */
+    flex-direction: column; /* And arrange it as a column (top to bottom) */
+    flex-wrap: wrap; /* Wrap anything */
+    justify-content: flex-start;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+/* Lists within the sidebar */
+.sidebar ul {
+    list-style: none; /* Should have no bullet points */
+    padding-left: 0; /* And should not be indented */
+    border-bottom: solid; /* Add a line to separate each section */
+    border-width: thin; /* Thin lines to separate it */
+    margin-bottom: 5px; /* Specify the amount of space between each element */
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+
+/* Sidebar selectors for when it is dark */
+.sidebar.bg-dark h6 {
+    color: white; /* sidebar content should be stand out over anchors */
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+.sidebar.bg-dark a {
+    color: lightgray; /* Make sidebar links this colour */
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+.note-content {
+    width: 100%; /* Note contents should span the whole page */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* I like this font selection */
 }
 
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+/* Selector specifically for the text area, which is used when creating/editing a note */
+textarea.note-content {
+    resize: vertical; /* Users should be able to resize the bottom of it */
+    overflow-y: scroll; /* Scroll if its too large */
+    height: 500px; /* Have a lot of space so the user can see what they wrote easily */
 }
 
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-}
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+/* Table anchor links */
+.table-anchor:hover {
+     text-decoration: none; /* No underline on hover */
 }
