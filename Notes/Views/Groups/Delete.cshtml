@@ -1,33 +1,37 @@
 ﻿@model Notes.Models.Group
 
 @{
-    ViewData["Title"] = "Delete";
+    /** TODO */
+    // use the group name in title, as well as heading
+    ViewData["Title"] = $"Delete group \"{Model.Name}\"?";
 }
 
-<h1>Delete</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Group</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
-</div>
+<h3>Are you sure you want to delete this group?</h3>
+<!-- Show the description, if it exists -->
+@if (Model.Description != null && !Model.Description.Equals(""))
+{
+    <p>This group is described as @Model.Description.</p>
+}
+
+<hr />
+
+<!-- Show a warning if there are notes in this group, and don't let them delete. -->
+@if (Model.Notes.Count != 0)
+{
+<h6>There are notes in this group. Please move or delete them before trying to delete this group.</h6>
+}
+// there are no notes, so this group can be deleted
+else
+{
+<!-- Additional warning -->
+<h6>This action is IRREVERSIBLE. Only click delete if you are OK with deleting this group.</h6>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Delete" class="btn btn-danger" />
+</form>
+}
+<hr />
+<a class="btn btn-outline-primary" asp-action="Index">Back to List</a>

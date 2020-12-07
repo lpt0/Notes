@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Notes.Models;
 
@@ -133,6 +134,8 @@ namespace Notes.Controllers
             }
 
             var @group = await _context.Groups
+                // include the notes, so the razor page can check if there are notes before deleting
+                .Include(m => m.Notes) 
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (@group == null)
             {
@@ -147,9 +150,31 @@ namespace Notes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            //TODO: Error check on delete
             var @group = await _context.Groups.FindAsync(id);
-            _context.Groups.Remove(@group);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Groups.Remove(@group);
+                // since this waits (await) for the changes to save, it gets run synchronously
+                await _context.SaveChangesAsync();
+            }
+            catch (SqlException)
+            {
+                /* Do nothing, just catch the error.
+                 * Assuming one user uses the site at a time:
+                 * A regular user would not reach this route during normal 
+                 * usage.
+                 * It's only if a user manually sends a POST or DELETE 
+                 * request to this endpoint, could this error happen
+                 * (notes that depend on this group)
+                 * So, for the purposes of this lab, this error is ignored
+                 * and the user gets sent back to the main group list.
+                 * They would be able to see that the group was not deleted,
+                 * and if they tried to delete it again, they could see that
+                 * there are notes in this group, and it cannot be deleted.
+                 */
+            }
+            // send the user back to the index page for groups
             return RedirectToAction(nameof(Index));
         }
 
