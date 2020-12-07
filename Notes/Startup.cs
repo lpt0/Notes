@@ -35,13 +35,6 @@ using Notes.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 
-// Needed for browser link (which allows for refreshing pages during development)
-// requires installation with NuGet
-// See: https://docs.microsoft.com/en-us/aspnet/core/client-side/using-browserlink?view=aspnetcore-3.1
-using Microsoft.VisualStudio.Web.BrowserLink;
-
-
-
 namespace Notes
 {
     public class Startup
@@ -87,9 +80,6 @@ namespace Notes
                  * show an error page with the stack trace of the exception
                  */
                 app.UseDeveloperExceptionPage();
-
-                // enable browser link
-                app.UseBrowserLink();
             }
             else
             {
