@@ -5,13 +5,18 @@ main {
 
 /* Sidebar formatting */
 .sidebar {
-    float: left; /* Set the sidebar to be to the left of the page */
     width: 7%; /* And specify the width of the sidebar (anything bigger will wrap) */
     padding-left: 0.5%; /* And add a bit of space between the edge of the screen */
     display: flex; /* Use a flexbox for the sidebar */
     flex-direction: column; /* And arrange it as a column (top to bottom) */
     flex-wrap: wrap; /* Wrap anything */
     justify-content: flex-start;
+    left: 0;
+    top: 0;
+    position: fixed; /* fix it to the left side of the display */
+    height: 100%; /* and span the whole height of the display */
+    padding-top: 0.25%; /* pad the top a bit to make it loko nicer */
+    z-index: 10; /* Place it above other elements (footer) */
 }
 
 /* Lists within the sidebar */
@@ -48,4 +53,11 @@ textarea.note-content {
 /* Table anchor links */
 .table-anchor:hover {
      text-decoration: none; /* No underline on hover */
+}
+
+/* footer styling */
+footer {
+    bottom: 0;
+    left: 7%; /* Since the sidebar is 7% in width, offset the footer by this much */
+    position: fixed; /* Fix the footer to the bottom */
 }

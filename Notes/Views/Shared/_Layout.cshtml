@@ -30,6 +30,7 @@
     <!-- The title, which is set by individual pages. -->
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
     <!-- The `asp-append-version` attribute adds the checksum of the CSS file (at compile-time).
          So, if the css file is changed during run-time, this will ensure that the most recent file
          is served (essentially serving as a cache buster of sorts). 
@@ -39,18 +40,28 @@
 <body>
     <header>
         <!-- Top navigation bar, which holds just a link to the main index for now 
-              I like the look of the dark navbar, so that's why I picked it -->
-        <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark ">
-            <!-- Link to the home page using the ASP provided attributes -->
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                <!-- The logo -->
-                <img src="~/img/logo.png" alt="Site Logo" height="32" width="32" /> 
-                Notes
-            </a>
-        </nav>
+             I like the look of the dark navbar, so that's why I picked it -->
+       
 
-        <!-- Sidebar with links to the main pages -->
+        <!-- I only want a sidebar, and that will hold the links to the main 
+             pages, and the login functionality for communication activity 5.
+             I like the look of the dark sidebar, so I use the dark 
+             background selector. -->
         <nav class="sidebar bg-dark">
+            <!-- Site-specific links (such as home page or about page) -->
+            <ul class="links" id="site">
+                <!-- About this application -->
+                <li>
+                    <!-- Link to the home page using the ASP provided attributes -->
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <!-- The logo -->
+                        <img src="~/img/logo.png" alt="Site Logo" height="32" width="32" />
+                        Notes
+                    </a>
+                </li>
+                <li><a asp-controller="Home" asp-action="About">About</a></li>
+            </ul>
+
             <!-- Using a heading tag to specify that this is a section -->
             <h6>Notes</h6>
             <ul class="links" id="notes">
@@ -72,43 +83,25 @@
                 <li><a asp-controller="Groups" asp-action="Index">View Groups</a></li>
                 <li><a asp-controller="Groups" asp-action="Create">Create a Group</a></li>
             </ul>
+
         </nav>
-        <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Notes</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Notes" asp-action="Index">View Notes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Groups" asp-action="Index">View Groups</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>-->
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
-            <!-- The actual page contents. This means the pages under the controller folders (such as Home/Index.cshtml). -->
+        <!-- Pad all sides by 4 - looks to be the sweet spot -->
+        <main role="main" class="p-4">
+            <!-- The actual page contents. This means the pages under the view folders (such as Home/Index.cshtml). -->
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - Notes - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- These two classes mean that there will be a line separating the 
+         footer from the rest of the content, similar to a <hr /> element.
+         Text muted means it will look a bit lighter than the other text. -->
+    <footer class="border-top text-muted">
+        <!-- Leave this as a container; the styling looks better -->
+        <div class="container"> 
+            <!-- Link to the GitHub repo -->
+            Notes - A simple note-taking application - <a href="https://github.com/lpt0/NETD3202-Lab5-Notes">View the source on GitHub</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
