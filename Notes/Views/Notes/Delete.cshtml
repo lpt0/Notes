@@ -1,7 +1,18 @@
 ﻿@model Notes.Models.Note
 
 @{
-    /** TODO */
+    /** Delete.cshtml
+     *
+     * This page allows a user to delete a note, if they really want to.
+     * It also shows all of the details of this note, including the note 
+     * content itself, so that the user knows that they're deleting the
+     * correct note. The reason I've done this is because I've deleted
+     * one file on accident, where I meant to delete another file. Being able
+     * to see the note that is being deleted will be helpful.
+     * 
+     * Author: Haran
+     * Date: December 6th, 2020
+     */
     ViewData["Title"] = $"Delete note \"{Model.Name}\"?";
 }
 

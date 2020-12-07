@@ -1,7 +1,17 @@
 ﻿@model Notes.Models.Note
 
 @{
-    /** TODO */
+    /** Details.cshtml
+     *
+     * This page allows a user to view all fields of a note, including its
+     * name, the user that created the note and the group that it is a part
+     * of (both with links to the user's notes and group's notes, 
+     * respectively). Users can also go to the page to edit or delete this  
+     * note from here.
+     *
+     * Author: Haran
+     * Date: December 6th, 2020
+     */
     // use the model name and author as the title
     ViewData["Title"] = $"\"{Model.Name}\" by {Model.User.Username}";
 }

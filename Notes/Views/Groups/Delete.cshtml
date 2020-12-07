@@ -1,7 +1,15 @@
 ﻿@model Notes.Models.Group
 
 @{
-    /** TODO */
+    /** Delete.cshtml
+     * 
+     * This page allows a user to delete a group.
+     * It will only show the delete button if the group contains 0 notes;
+     * otherwise, it will display a warning and not show the button.
+     *
+     * Author: Haran
+     * Date: December 6th, 2020
+     */
     // use the group name in title, as well as heading
     ViewData["Title"] = $"Delete group \"{Model.Name}\"?";
 }

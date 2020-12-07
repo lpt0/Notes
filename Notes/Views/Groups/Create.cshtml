@@ -1,13 +1,22 @@
 ﻿@model Notes.Models.Group
 
 @{
+    /** Create.cshtml
+     * 
+     * This page allows a user to create a group, by specifying a name and 
+     * optionally, a description to describe the group of notes.
+     * 
+     * Author: Haran
+     * Date: December 6th, 2020
+     */
+
     ViewData["Title"] = "Create a new group";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <hr />
-<!-- Make the input boxes a bit longer -->
+<!-- Make the input boxes a bit longer than username -->
 <div class="col-md-6">
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>

@@ -1,6 +1,11 @@
 ﻿/** HomeController.cs
  * 
- * TODO
+ * This controller handles functionality under the Home/ route, as well as
+ * the root of the site (/). 
+ * The only change made here was to add the About route, which returns a page
+ * that describes what this application is for.
+ * The privacy route has been removed.
+ * 
  * 
  * Author: Haran
  * Date: December 6th, 2020
@@ -30,11 +35,6 @@ namespace Notes.Controllers
         /// </summary>
         /// <returns>The `index` page view.</returns>
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }

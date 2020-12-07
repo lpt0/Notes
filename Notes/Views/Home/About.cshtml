@@ -1,6 +1,14 @@
 ﻿
 @{
-    /** TODO */
+    /** About.cshtml
+     *
+     * This page gives an explanation of what this application is, and some
+     * use cases for it. It also provides tips on how to get started to 
+     * create a user and a note.
+     * 
+     * Author: Haran
+     * Date: December 6th, 2020
+     */
     ViewData["Title"] = "About";
 }
 
@@ -14,5 +22,9 @@
     For example, you could have one group for all of your school notes, another for your shopping lists, and another collection for your personal notes or a to-do list.
 </p>
 <p>
-    You can get started by clicking "Create a Note" on the left, or by clicking <a asp-controller="Notes" asp-action="Create"> here.</a>
+    You can get started by clicking "Create a User" on the left to create your own user, then using "Create a Note" to write a note.
+</p>
+<p>
+    Alternatively, you can click <a asp-controller="Users" asp-action="Create">here</a> to create a user,
+    then click <a asp-controller="Notes" asp-action="Create">here</a> to write a new note.
 </p>

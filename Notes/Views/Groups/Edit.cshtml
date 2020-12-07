@@ -1,7 +1,15 @@
 ﻿@model Notes.Models.Group
 
 @{
-    /** TODO */
+    /** Edit.cshtml
+     *
+     * This page allows a user to edit the name and, optionally, the 
+     * description of a group. It also includes a delete button, if the user
+     * wishes to (try to) delete the group.
+     * 
+     * Author: Haran
+     * Date: December 6th, 2020
+     */
     // use the group name in the title
     ViewData["Title"] = $"Edit group \"{Model.Name}\"";
 }
@@ -28,13 +36,15 @@
             <div class="form-group">
                 <!-- Outlined button, for consistency -->
                 <input type="submit" value="Save" class="btn btn-outline-primary" />
-                <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
 <div>
+    <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
+    <!-- Delete button, just in case -->
+    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
 </div>
 
 @section Scripts {

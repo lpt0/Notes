@@ -1,6 +1,8 @@
 ﻿/** Group.cs
  * 
- * TODO
+ * A model to represent a group (or collection) of notes.
+ * Users can create groups to organize notes into separate groups, 
+ * categories, or collections.
  * 
  * Author: Haran
  * Date: December 2nd, 2020

@@ -1,7 +1,15 @@
 ﻿@model Notes.Models.User
 
 @{
-    /** TODO */
+    /** Details.cshtml
+     * This page shows all of the notes created by this specific user, if
+     * they have any notes. 
+     * From here, users may also view, edit, or delete their notes using a
+     * provided button.
+     *
+     * Author: Haran
+     * Date: December 6th, 2020
+     */
     // use the user's username within the title
     ViewData["Title"] = $"{Model.Username}'s notes";
 }

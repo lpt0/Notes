@@ -1,11 +1,17 @@
 ﻿@{ 
-/** _Layout.cs
- * 
- * TODO
- * 
- * Author: Haran
- * Date: December 4th, 2020
- */
+    /** _Layout.cs
+     * 
+     * This page serves as a wrapper around other pages.
+     * It contains elements such as the sidebar, which holds links to other pages
+     * of the site (such as creating/viewing notes, users, and groups) as well as
+     * a link to the about page. 
+     * It also contains a footer, with a link to the GitHub repository for this
+     * project.
+     * This cshtml file renders other files by using the RenderBody function.
+     * 
+     * Author: Haran
+     * Date: December 4th, 2020
+     */
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -29,12 +35,15 @@
     <meta name="description" content="A simple note-taking application." />
     <!-- The title, which is set by individual pages. -->
     <title>@ViewData["Title"]</title>
+
+    <!-- Include the Bootstrap CSS library-->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
     <!-- The `asp-append-version` attribute adds the checksum of the CSS file (at compile-time).
          So, if the css file is changed during run-time, this will ensure that the most recent file
          is served (essentially serving as a cache buster of sorts). 
-         This links to the CSS file under wwwroot/css/ -->
+         This links to the CSS file under wwwroot/css/ that contains my 
+         custom styling -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
 </head>
 <body>
@@ -104,9 +113,12 @@
             Notes - A simple note-taking application - <a href="https://github.com/lpt0/NETD3202-Lab5-Notes">View the source on GitHub</a>
         </div>
     </footer>
+    <!-- The scripts used in this application were pre-included by 
+         Visual Studio and ASP.NET Core. It takes care of client-side 
+         validation, among other things. 
+         Since the site.js file was not being used, it has been removed. -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

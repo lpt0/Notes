@@ -1,7 +1,17 @@
 ﻿@model Notes.Models.Note
 
 @{
-    /** TODO */
+    /** Edit.cshtml
+     * 
+     * This page allows a user to edit properties of a note, including
+     * the name, description, the content, and optionally, the group that 
+     * this note is a part of. The user that created the note cannot be 
+     * changed.
+     * Users can also go to the page to delete this note from here.
+     * 
+     * Author: Haran
+     * Date: December 6th, 2020
+     */
     ViewData["Title"] = $"Edit note \"{Model.Name}\"";
 }
 

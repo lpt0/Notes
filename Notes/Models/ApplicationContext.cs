@@ -1,6 +1,15 @@
 ﻿/** ApplicationContext.cs
  * 
- * TODO
+ * This context class is what connects the server, ASP.NET Core, with the 
+ * database, SQL Server Express (since I don't remember paying for SQL 
+ * Server).
+ * This uses the Entity Framework Core (since it is .NET Core) to create
+ * tables specified by the models used in the application (and specified
+ * by including a DbSet for that model). It also takes care of creating the
+ * necessary relationships between these models (and tables).
+ * The controllers use this context class to communicate with the database,
+ * and this can be seen whenever the `_context` variable is used in those
+ * files - that variable refers to this context class.
  * 
  * Author: Haran
  * Date: December 2nd, 2020

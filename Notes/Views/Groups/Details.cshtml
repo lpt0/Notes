@@ -1,7 +1,17 @@
 ﻿@model Notes.Models.Group
 
 @{
-    /** TODO */
+    /** Details.cshtml
+     * 
+     * This page allows the user to see the notes associated with a single 
+     * group. From here, users may view a note, edit it, or delete the note.
+     * Each note also contains a link to the details page of the user that
+     * created the note, which can show the user all notes created by that
+     * user.
+     *
+     * Author: Haran
+     * Date: December 6th, 2020
+     */
     ViewData["Title"] = $"Notes under \"{Model.Name}\"";
 }
 
