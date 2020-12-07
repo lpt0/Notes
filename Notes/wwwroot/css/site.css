@@ -60,4 +60,16 @@ footer {
     bottom: 0;
     left: 7%; /* Since the sidebar is 7% in width, offset the footer by this much */
     position: fixed; /* Fix the footer to the bottom */
+    z-index: 9; /* Below sidebar, above main content */
+    width: 100%; /* Size to whole bottom of display */
+    color: gray; /* Dark text, but not to the point of blending in */
+}
+
+footer a {
+    color: #A0A0A0; /* Link to repo */
+}
+
+footer a:hover {
+    color: #909090;
+    text-decoration: none; /* No underline on hover */
 }
