@@ -57,8 +57,9 @@
                         }
                     </td>
                     <td>
-                        <!-- A link to view the note, edit it, or delete it -->
-                        <!-- TODO - buttons -->
+                        <!-- See groups index for reasoning for this -->
+                        <a class="btn btn-outline-success" asp-controller="Notes" asp-action="Details" asp-route-id="@item.Id">View</a>
+                        <!-- A link to edit the note, or delete it, as a button -->
                         <a class="btn btn-outline-primary" asp-controller="Notes" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                         <a class="btn btn-outline-danger" asp-controller="Notes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>

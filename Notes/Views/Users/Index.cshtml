@@ -9,7 +9,9 @@
 <p>Click on a username to be taken to a list of their notes.</p>
 
 <p>
-    <a asp-action="Create">Create a new user</a>
+    <!-- See Notes/Index.cshtml for reasoning behind placing the button here,
+         and styling it this way -->
+    <a class="btn btn-primary" asp-action="Create">Create</a>
 </p>
 <!-- Change colour on hover, like notes table -->
 <table class="table table-hover">
@@ -23,6 +25,7 @@
                 <!-- Another column for the number of notes -->
                 Number of Notes
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -37,6 +40,10 @@
             <td>
                 <!-- Show the number of notes that this user has created -->
                 @Html.DisplayFor(modelItem => item.Notes.Count)
+            </td>
+            <td>
+                <!-- Eh, for consistency, show a view button -->
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-success">View</a>
             </td>
             <!-- Users cannot be edited/deleted like most sites (except by special request, i.e. GDPR compliance) -->
         </tr>

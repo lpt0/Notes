@@ -29,7 +29,10 @@
         </div>
         <div class="form-group">
             <label asp-for="GroupId" class="control-label">Group (optional)</label>
-            <select asp-for="GroupId" class="form-control" asp-items="ViewBag.GroupId"></select>
+            <select asp-for="GroupId" class="form-control" asp-items="ViewBag.GroupId">
+                <!-- Add a default element, in case the user does not want to pick a group -->
+                <option selected value=""></option>
+            </select>
         </div>
         <div class="form-group">
             <label asp-for="Content" class="control-label">Content</label>
@@ -47,7 +50,8 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <!-- I like the way that the outline buttons look -->
+    <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

@@ -2,51 +2,50 @@
 
 @{
     /** TODO */
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = $"Delete note \"{Model.Name}\"?";
 }
 
-<h1>Delete</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you SURE you want to delete this note?</h3>
 <div>
-    <h4>Note</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Username)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Group)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Group.Name)
-        </dd class>
-    </dl>
+    <!-- Display the username and group for this note too
+         Don't link to it, so the user does not get distracted by the fact
+         they are deleting this note. -->
+    <p>This note was created by @Html.DisplayFor(model => model.User.Username).</p>
+
+    <!-- Only show the group name if there is a group-->
+    @if(Model.Group != null)
+    {
+        <p>This note is stored under the @Html.DisplayFor(model => model.Group.Name) group.</p>
+    }
     
+    <!-- Show the description if there is one -->
+    @if(Model.Description != null && !Model.Description.Equals(""))
+    {
+        <p>The description for this note is: @Html.DisplayFor(model => model.Description)</p>
+    }
+
+    <hr />
+    <!-- Use the same layout for content as the create and edit page, so the
+         user can view the entire note to be ABSOLUTELY sure they want to
+         delete it -->
+    <pre class="note-content">
+            @Html.DisplayFor(model => model.Content)
+    </pre>
+    <hr />
+    
+    <!-- An extra warning.
+         I've deleted data on accident in the past (using shift+del while 
+         deleting many files), so this is more for me, if anything. -->
+    <p>This action is IRREVERSIBLE. If this note is deleted, it cannot be recovered.</p>
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <!-- I'm NOT using an outline button here, because this button should
+             pop out; the user needs to know that they are, in fact, 
+             DELETING this note. -->
+        <input type="submit" value="Delete" class="btn btn-danger" /> 
+        <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
     </form>
 </div>

@@ -3,15 +3,14 @@
 @{
     /** TODO */
     // use the model name and author as the title
-    ViewData["Title"] = $"{Model.Name} by {Model.User.Username}";
+    ViewData["Title"] = $"\"{Model.Name}\" by {Model.User.Username}";
 }
 
 <!-- Just the note name as the title -->
-<h1>@Model.Name</h1> <!-- TODO: Show edit button -->
+<h1>@Model.Name</h1>
 <!-- And display the username right under that, with a link to the user,
      using asp attributes to build the href attribute -->
 <h6>by <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.User.Id">@Model.User.Username</a></h6>
-<!-- TODO: Display collection name if present -->
 @{
     // If present, display the group along with a link to that group's page (which shows all notes contained within it)
     if (Model.GroupId != null)
@@ -38,11 +37,14 @@
     <!-- Using the `pre` element, as that will display the text with the formatting and newlines intact -->
     <pre class="note-content">
             @Html.DisplayFor(model => model.Content)
-        </pre>
+    </pre>
     <!-- And a line to show that this is the end of the content -->
     <hr />
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <!-- After reading the note, the user may wish to edit or delete it -->
+    <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
+    <!-- The delete button is last so the user doesn't click it on accident -->
+    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
 </div>

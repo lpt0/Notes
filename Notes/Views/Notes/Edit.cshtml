@@ -2,7 +2,7 @@
 
 @{
     /** TODO */
-    ViewData["Title"] = $"Edit {Model.Name}";
+    ViewData["Title"] = $"Edit note \"{Model.Name}\"";
 }
 
 <!-- Same heading as title -->
@@ -27,7 +27,10 @@
         </div>
         <div class="form-group">
             <label asp-for="GroupId" class="control-label">Group (optional)</label>
-            <select asp-for="GroupId" class="form-control" asp-items="ViewBag.GroupId"></select>
+            <select asp-for="GroupId" class="form-control" asp-items="ViewBag.GroupId">
+                <!-- Blank option, if no group is needed -->
+                <option value=""></option>
+            </select>
         </div>
         <div class="form-group">
             <label asp-for="Content" class="control-label">Content</label>
@@ -38,13 +41,16 @@
             <span asp-validation-for="Content" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="submit" value="Edit" class="btn btn-outline-primary" />
+            <!-- Save the note -->
+            <input type="submit" value="Save" class="btn btn-outline-primary" />
         </div>
     </form>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
+    <!-- Provide a delete button as well, just in case they choose to delete the note instead of changing it -->
+    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
 </div>
 
 @section Scripts {
