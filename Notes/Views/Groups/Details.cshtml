@@ -2,7 +2,7 @@
 
 @{
     /** TODO */
-    ViewData["Title"] = $"Notes under {Model.Name}";
+    ViewData["Title"] = $"Notes under \"{Model.Name}\"";
 }
 
 <!-- Same heading as title -->
@@ -49,8 +49,13 @@
                         </a>
                     </td>
                     <td>
-                        <!-- A link to view the note, edit it, or delete it -->
-                        <!-- TODO - buttons -->
+                        <!-- Adding a view button as well because the other 
+                             buttons may catch the user's attention first 
+                             Having a view button here means the user can
+                             access it from more than one spot, which 
+                             could be easier for them -->
+                        <a class="btn btn-outline-success" asp-controller="Notes" asp-action="Details" asp-route-id="@item.Id">View</a>
+                        <!-- A link to edit the note, or delete it, as a button -->
                         <a class="btn btn-outline-primary" asp-controller="Notes" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                         <a class="btn btn-outline-danger" asp-controller="Notes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>
@@ -61,6 +66,16 @@
 
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <!-- Edit button, and return to list button -->
+    <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
+
+    @{ 
+        // only show the delete button if there are no notes
+        if (Model.Notes.Count == 0)
+        {
+            <!-- Delete button as well, just in case -->
+            <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        }
+    }
 </div>
