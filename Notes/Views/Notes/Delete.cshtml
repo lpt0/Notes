@@ -42,9 +42,7 @@
     <!-- Use the same layout for content as the create and edit page, so the
          user can view the entire note to be ABSOLUTELY sure they want to
          delete it -->
-    <pre class="note-content">
-            @Html.DisplayFor(model => model.Content)
-    </pre>
+    <pre class="note-content">@Html.DisplayFor(model => model.Content)</pre>
     <hr />
     
     <!-- An extra warning.
