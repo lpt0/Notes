@@ -1,8 +1,14 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    /** TODO */
+    /* This page gets called by RenderBody (from Shared/_Layout.cshtml) which
+       renders this page, and any code on it (such as setting the title 
+       below) */
+    ViewData["Title"] = "Notes";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Notes</h1>
+<p>
+    To get started, <a asp-controller="Users" asp-action="Create">create a user</a>, then, 
+    <a asp-controller="Notes" asp-action="Create">create a note.</a>
+</p>
+<p>You may also want to <a asp-controller="Groups" asp-action="Create">create a group or two</a> to organize your notes.</p>
