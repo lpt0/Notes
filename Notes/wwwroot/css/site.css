@@ -1,4 +1,9 @@
-﻿/* Main content (everything outside of the header, navbars, and footer) */
+﻿* {
+    /* Unless overriden, use these fonts; I like the way they look. */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Main content (everything outside of the header, navbars, and footer) */
 main {
     padding: 1%; /* Add some space*/
 }
@@ -40,7 +45,6 @@ main {
 
 .note-content {
     width: 100%; /* Note contents should span the whole page */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* I like this font selection */
 }
 
 /* Selector specifically for the text area, which is used when creating/editing a note */
