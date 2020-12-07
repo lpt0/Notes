@@ -1,6 +1,6 @@
 ﻿/** User.cs
  * 
- * TODO
+ * This model defines the properties of a user of this website.
  * 
  * Author: Haran
  * Date: December 4th, 2020

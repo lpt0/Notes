@@ -1,6 +1,6 @@
 ﻿/** Note.cs
  * 
- * TODO
+ * This model defines the properties of a note created on this service.
  * 
  * Author: Haran
  * Date: December 2nd, 2020
