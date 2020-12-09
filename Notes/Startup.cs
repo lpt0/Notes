@@ -35,6 +35,10 @@ using Notes.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 
+// Following imports are for Identity usage
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
+
 namespace Notes
 {
     public class Startup
@@ -69,6 +73,17 @@ namespace Notes
             /* Having one context instead of two+ makes it easier to link 
              * tables together */
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+
+            /* Setup identity usage
+             * The first line here means that users will need to have a 
+             * confirmed account to be able to login. Since there is no mail
+             * server to send confirmation emails, it will just prompt the 
+             * user to confirm by clicking a link. 
+             * That function returns an IdentityBuilder for chaining, and 
+             * that is used to add the context that connects all tables used
+             * in this application. */
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<ApplicationContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,6 +108,7 @@ namespace Notes
 
             app.UseRouting();
 
+            app.UseAuthentication(); // needed for Identity
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
