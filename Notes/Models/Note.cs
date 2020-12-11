@@ -41,10 +41,12 @@ namespace Notes.Models
         public string Description { get; set; }
 
         /// <summary>
-        /// The User ID associated with this note.
+        /// The user associated with this note.
+        /// By default, the ID for IdentityUser (which the User model is 
+        /// based on) is a string - not an int.
         /// </summary>
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         /// <summary>
         /// The user that created the note.

@@ -19,16 +19,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-// needed to inherit DbContext
+// needed to inherit DbContext, DbSet. DbContextOptions
 using Microsoft.EntityFrameworkCore;
+
+// needed to inherit IdentityDbContext
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Notes.Models
 {
     /* Inherit from DbContext, which is part of the Microsoft Entity 
      * Framework, which is an Object-Relational mapper (maps objects to 
      * database tables, and handles creating, retrieving, updating, and 
-     * deleting objects in the database.) */
-    public class ApplicationContext : DbContext
+     * deleting objects in the database.) 
+     * By specifing a type for the IdentityDbContext (using <User>), the 
+     * default IdentityUser can be overriden with my custom user class, which
+     * links to the Notes table.
+     */
+    public class ApplicationContext : IdentityDbContext<User>
     {
         // Constructor for this class; calls the DbContext constructor
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
@@ -36,8 +44,16 @@ namespace Notes.Models
 
         }
 
-        // link to the User class
-        public DbSet<User> Users { get; set; }
+        /* link to the User class
+         * Since User inherits from IdentityUser, and my custom User class
+         * was specified for the IdentityDbContext, it is fine to override
+         * the base Users property.
+         */
+        public override DbSet<User> Users { get; set; }
+        //public override DbSet<User> Users { get; set; } //TODO: can I override it?
+
+        //TODO
+        //public DbSet<UserNote> UserNotes { get; set; }
 
         /* This handles linking the note to the database (since its the only 
          * reference to the Note class */
