@@ -20,6 +20,9 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Notes.Models;
 
+// needed for authorization middleware
+using Microsoft.AspNetCore.Authorization;
+
 namespace Notes.Controllers
 {
     public class GroupsController : Controller
@@ -58,6 +61,8 @@ namespace Notes.Controllers
         }
 
         // GET: Groups/Create
+        // Only logged in users may create groups
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -66,10 +71,14 @@ namespace Notes.Controllers
         // POST: Groups/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // only logged in users may create groups
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] Group @group)
         {
+            /* groups aren't associated with users, but still require a login
+             * to create */
             if (ModelState.IsValid)
             {
                 _context.Add(@group);
@@ -80,6 +89,8 @@ namespace Notes.Controllers
         }
 
         // GET: Groups/Edit/5
+        // only logged in users may edit groups; but they may edit any group
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,6 +109,8 @@ namespace Notes.Controllers
         // POST: Groups/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // only logged in users may edit groups
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Group @group)
@@ -131,6 +144,8 @@ namespace Notes.Controllers
         }
 
         // GET: Groups/Delete/5
+        // only logged in users may delete groups, and delete any groups
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -151,6 +166,7 @@ namespace Notes.Controllers
         }
 
         // POST: Groups/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -55,7 +55,7 @@
                     <td>
                         <!-- Link back to the user that created this note -->
                         <a asp-controller="Users" asp-action="Details" asp-route-id="@item.UserId">
-                            @Html.DisplayFor(modelItem => item.User.Username)
+                            @Html.DisplayFor(modelItem => item.User.UserName)
                         </a>
                     </td>
                     <td>
