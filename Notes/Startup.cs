@@ -56,23 +56,21 @@ namespace Notes
             services.AddControllersWithViews();
 
             // enable compatability with ASP.NET Core 2.1 (required)
+            /* following line disables the warning, the matching pragma 
+             * instruction switches the warning back on */
+            #pragma warning disable CS0618 // Type or member is obsolete
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            #pragma warning restore CS0618 // Type or member is obsolete
 
             // disable endpoint routing; this was an issue upgrading from ASP.Net Core 2.0 to 3.0
             services.AddMvc(options => options.EnableEndpointRouting = false);
 
-            /* create the connection string, to connect to the database
-             * `@` prefix means it is a string literal - it ignores escape
-             * sequences (anything with a backslash) 
-             * Connect to a local database named "Notes", using a trusted 
-             * connection, and not retrying if it fails (since it is a local
-             * database, and not a remote one, it should not fail).
-             */
-            string connection = @"Server=(localdb)\mssqllocaldb;Database=Notes;Trusted_Connection=True;ConnectRetryCount=0";
-
             /* Having one context instead of two+ makes it easier to link 
              * tables together */
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<ApplicationContext>(
+                // get the connection string from appsettings.json
+                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            );
 
             /* Setup identity usage
              * The first line here means that users will need to have a 
@@ -86,7 +84,10 @@ namespace Notes
              * be used as the default identity.
              */
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<ApplicationContext>();
+                    .AddEntityFrameworkStores<ApplicationContext>()
+                    .AddDefaultTokenProviders();
+
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
