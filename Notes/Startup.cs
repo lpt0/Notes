@@ -81,8 +81,11 @@ namespace Notes
              * user to confirm by clicking a link. 
              * That function returns an IdentityBuilder for chaining, and 
              * that is used to add the context that connects all tables used
-             * in this application. */
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+             * in this application. 
+             * Since the IdentityUser class is oevrriden by User, that has to
+             * be used as the default identity.
+             */
+            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationContext>();
         }
 
