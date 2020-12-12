@@ -1,4 +1,7 @@
-﻿@model Notes.Models.User
+﻿@using Microsoft.AspNetCore.Identity 
+
+@model Notes.Models.User
+@inject UserManager<User> userManager
 
 @{
     /** Details.cshtml
@@ -6,12 +9,19 @@
      * they have any notes. 
      * From here, users may also view, edit, or delete their notes using a
      * provided button.
+     * Only the creator of the note can see the edit/delete buttons.
      *
      * Author: Haran
      * Date: December 6th, 2020
      */
+    // The using/inject statements above are needed to get the logged in user
     // use the user's username within the title
-    ViewData["Title"] = $"{Model.Username}'s notes";
+    ViewData["Title"] = $"{Model.UserName}'s notes";
+
+    /* get the current logged in user id (instead of getting it every loop
+       iteration) */
+    string currentUserId = userManager.GetUserId(User);
+    
 }
 
 <!-- Same as the title -->
@@ -67,9 +77,21 @@
                     <td>
                         <!-- See groups index for reasoning for this -->
                         <a class="btn btn-outline-success" asp-controller="Notes" asp-action="Details" asp-route-id="@item.Id">View</a>
-                        <!-- A link to edit the note, or delete it, as a button -->
-                        <a class="btn btn-outline-primary" asp-controller="Notes" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                        <a class="btn btn-outline-danger" asp-controller="Notes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        @{ 
+                            /* only show the edit and delete buttons for the
+                               creator of the note.
+                               since this is the user's page, and only shows
+                               their notes, the Id of the current model - the
+                               user - can be checked instead of the note's
+                               UserId.
+                                */
+                            if (Model.Id.Equals(currentUserId))
+                            {
+                                <!-- A link to edit the note, or delete it, as a button -->
+                                <a class="btn btn-outline-primary" asp-controller="Notes" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                <a class="btn btn-outline-danger" asp-controller="Notes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            }
+                        }
                     </td>
                 </tr>
             }

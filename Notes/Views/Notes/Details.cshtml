@@ -18,6 +18,10 @@
     // the using/inject statement at the top are needed to get current user
     // use the model name and author as the title
     ViewData["Title"] = $"\"{Model.Name}\" by {Model.User.UserName}";
+
+    /* get the current logged in user id (instead of getting it every loop
+       iteration, and in this case, twice every iteration) */
+    string currentUserId = userManager.GetUserId(User);
 }
 
 <!-- Just the note name as the title -->
@@ -58,7 +62,7 @@
 <div>
     @{ 
         // only show the edit button if this is the logged in user's note
-        if (Model.UserId.Equals(userManager.GetUserId(User)))
+        if (Model.UserId.Equals(currentUserId))
         {
             <!-- After reading the note, the user may wish to edit it -->
             <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
@@ -68,7 +72,7 @@
     <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
     @{ 
         // only show the delete button if the user is allowed to (their note)
-        if (Model.UserId.Equals(userManager.GetUserId(User)))
+        if (Model.UserId.Equals(currentUserId))
         {
             <!-- The delete button is last so the user doesn't click it on accident -->
             <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>

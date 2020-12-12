@@ -17,8 +17,12 @@
     //TODO: Only show edit and delete button if it is authorized user
     /* The using statement and injection statement at the top are used to be
        able to determine the logged in user, and whether or not the edit or
-       delete button should be shown. */ 
+       delete button should be shown. */
     ViewData["Title"] = "All notes";
+
+    /* get the current logged in user id (instead of getting it every loop
+       iteration) */
+    string currentUserId = userManager.GetUserId(User);
 }
 
 <h1>All notes</h1>
@@ -102,7 +106,7 @@
                 <a class="btn btn-outline-success" asp-action="Details" asp-route-id="@item.Id">View</a>
                 @{ 
                     // check if this note belongs to the logged in user
-                    if (item.UserId.Equals(userManager.GetUserId(User)))
+                    if (item.UserId.Equals(currentUserId))
                     {
                         /* show the edit and delete buttons, since the user
                            may edit/delete their own notes, and only they can
