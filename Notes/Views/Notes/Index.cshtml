@@ -1,15 +1,23 @@
-﻿@model IEnumerable<Notes.Models.Note>
+﻿@using Microsoft.AspNetCore.Identity;
+ 
+@model IEnumerable<Notes.Models.Note>
+@inject UserManager<User> userManager
 
 @{
     /** Index.cshtml
      * 
      * This page contains a list of all notes currently stored in the 
      * database. The list has buttons to allow users to view, edit, or delete
-     * these notes.
+     * these notes. The edit and delete button will show only for the note's
+     * creator.
      * 
      * Author: Haran
      * Date: December 6th, 2020
      */
+    //TODO: Only show edit and delete button if it is authorized user
+    /* The using statement and injection statement at the top are used to be
+       able to determine the logged in user, and whether or not the edit or
+       delete button should be shown. */ 
     ViewData["Title"] = "All notes";
 }
 
@@ -70,7 +78,7 @@
             <td>
                 <!-- Link to the user -->
                 <a class="table-anchor" asp-controller="Users" asp-action="Details" asp-route-id="@item.User.Id">
-                    @Html.DisplayFor(modelItem => item.User.Username)
+                    @Html.DisplayFor(modelItem => item.User.UserName)
                 </a>
             </td>
             <!-- Again, not showing content since it can be long -->
@@ -92,9 +100,18 @@
                      It all depends on where the user is looking, so better
                      to have two ways to access it -->
                 <a class="btn btn-outline-success" asp-action="Details" asp-route-id="@item.Id">View</a>
-                <!-- A link to edit the note, or delete it -->
-                <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @{ 
+                    // check if this note belongs to the logged in user
+                    if (item.UserId.Equals(userManager.GetUserId(User)))
+                    {
+                        /* show the edit and delete buttons, since the user
+                           may edit/delete their own notes, and only they can
+                           do this. */
+                        <!-- A link to edit the note, or delete it -->
+                        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                }
             </td>
         </tr>
 }

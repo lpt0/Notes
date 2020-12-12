@@ -9,6 +9,9 @@
      * correct note. The reason I've done this is because I've deleted
      * one file on accident, where I meant to delete another file. Being able
      * to see the note that is being deleted will be helpful.
+     *
+     * Only the creator of a note will be able to view this page, and by
+     * extension, view this page for their note.
      * 
      * Author: Haran
      * Date: December 6th, 2020
@@ -24,7 +27,7 @@
     <!-- Display the username and group for this note too
          Don't link to it, so the user does not get distracted by the fact
          they are deleting this note. -->
-    <p>This note was created by @Html.DisplayFor(model => model.User.Username).</p>
+    <p>This note was created by @Html.DisplayFor(model => model.User.UserName).</p>
 
     <!-- Only show the group name if there is a group-->
     @if(Model.Group != null)
