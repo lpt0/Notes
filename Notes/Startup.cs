@@ -55,6 +55,11 @@ namespace Notes
         {
             services.AddControllersWithViews();
 
+            services.AddRazorPages(); //TODO
+            services.AddMvc(); //TODO
+            // disable endpoint routing; this was an issue upgrading from ASP.Net Core 2.0 to 3.0
+            services.AddMvc(options => options.EnableEndpointRouting = false);
+
             // enable compatability with ASP.NET Core 2.1 (required)
             /* following line disables the warning, the matching pragma 
              * instruction switches the warning back on */
@@ -62,8 +67,6 @@ namespace Notes
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             #pragma warning restore CS0618 // Type or member is obsolete
 
-            // disable endpoint routing; this was an issue upgrading from ASP.Net Core 2.0 to 3.0
-            services.AddMvc(options => options.EnableEndpointRouting = false);
 
             /* Having one context instead of two+ makes it easier to link 
              * tables together */
@@ -83,11 +86,11 @@ namespace Notes
              * Since the IdentityUser class is oevrriden by User, that has to
              * be used as the default identity.
              */
-            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationContext>()
-                    .AddDefaultTokenProviders();
+                    .AddDefaultTokenProviders()
+                    .AddDefaultUI(); //TODO
 
-            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,6 +123,7 @@ namespace Notes
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages(); // Needed after scaffolding identity pages
             });
         }
     }
