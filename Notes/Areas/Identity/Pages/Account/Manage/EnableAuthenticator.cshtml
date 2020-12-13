@@ -22,7 +22,6 @@
         </li>
         <li>
             <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
-            <div class="alert alert-info">Learn how to <a href="https://go.microsoft.com/fwlink/?Linkid=852423">enable QR code generation</a>.</div>
             <div id="qrCode"></div>
             <div id="qrCodeData" data-url="@Html.Raw(@Model.AuthenticatorUri)"></div>
         </li>
@@ -50,4 +49,18 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <!-- See: https://docs.microsoft.com/en-ca/aspnet/core/security/authentication/identity-enable-qrcodes?view=aspnetcore-3.1 -->
+    <!-- Include QR Code generation script (minified version) -->
+    <script type="text/javascript" src="~/lib/qrcode.min.js"></script>
+    <script type="text/javascript">
+        // After including the library to do so, generate a QR code
+        new QRCode(
+            document.getElementById("qrCode"),
+            {
+                text: "@Html.Raw(Model.AuthenticatorUri)",
+                width: 150, // 150 x 150 image
+                height: 150
+            }
+        )
+    </script>
 }
