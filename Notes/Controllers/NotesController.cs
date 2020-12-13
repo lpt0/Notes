@@ -20,6 +20,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Notes.Models;
 
+// Needed for authorization (data annotation)
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+
 namespace Notes.Controllers
 {
     public class NotesController : Controller
@@ -27,9 +31,14 @@ namespace Notes.Controllers
         // the context is what allows the controller to communicate with the database
         private readonly ApplicationContext _context;
 
-        public NotesController(ApplicationContext context)
+        /* user manager is required to be able to get details of logged in 
+         * users */
+        private readonly UserManager<User> _userManager; //TODO
+
+        public NotesController(ApplicationContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager; // set the user manager
         }
 
         // GET: Notes
@@ -60,21 +69,33 @@ namespace Notes.Controllers
         }
 
         // GET: Notes/Create
+        // only users may create notes
+        [Authorize]
         public IActionResult Create()
         {
             // populate the group and user select lists
             ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Username");
+            //TODO: No longer ask the user to select a user that created the note
             return View();
         }
 
         // POST: Notes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // again, only users may create notes
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Content,Description,UserId,GroupId")] Note note)
+        public async Task<IActionResult> Create([Bind("Id,Name,Content,Description,GroupId")] Note note)
         {
+            /* the UserId is not set at this point, since it's not an input
+             * in the form.
+             * So, use the Id from the logged in user and set the note's 
+             * UserId. */
+            note.UserId = _userManager.GetUserId(User);
+            // there is now a user associated with the created note.
+
             // inputted data is valid?
             if (ModelState.IsValid)
             {
@@ -82,12 +103,22 @@ namespace Notes.Controllers
                 await _context.SaveChangesAsync(); // wait for the database write to complete
                 return RedirectToAction(nameof(Index)); // send the user back to the note list
             }
+            /* It seems that, if the model state is *not* valid, ASP does a 
+             * very good job of taking care of that.
+             * Instead of erroring out, it looks like it will redirect the
+             * user back to the page and display an error. This is done 
+             * server-side.
+             * This is on top of the validation scripts included by default,
+             * which also takes care of this on the client-side. 
+             */
             ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", note.GroupId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Username", note.UserId);
+
             return View(note);
         }
 
         // GET: Notes/Edit/5
+        // Only user who created this note can edit it
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -95,20 +126,35 @@ namespace Notes.Controllers
                 return NotFound();
             }
 
+
             var note = await _context.Notes.FindAsync(id);
             if (note == null)
             {
                 return NotFound();
             }
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", note.GroupId);
-            // removed the user id from view data, since I don't want that to be editable
-            return View(note);
+
+            // check if user id for note matches logged in id
+            if (note.UserId.Equals(_userManager.GetUserId(User)))
+            {
+                ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", note.GroupId);
+                // removed the user id from view data, since I don't want that to be editable
+                return View(note);
+            }
+            // otherwise, someone else is trying to edit another user's note
+            else
+            {
+                /* this will redirect (302) the user to an error page saying
+                 * "Access Denied". */
+                return Forbid();
+            }
         }
 
         // POST: Notes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         // Even though the UserId field is not modified, it still needs to be bound to
+        // Only user who created this note can edit it
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Content,Description,GroupId")] Note note)
@@ -118,56 +164,69 @@ namespace Notes.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            // check if the logged in user id matches the note's
+            if (note.UserId.Equals(_userManager.GetUserId(User)))
             {
-                try
+                // this note is the logged in user's note; OK to edit
+                if (ModelState.IsValid)
                 {
-                    // so, I had to get some help for this one
-                    // this stackoverflow answer helped me find the solution below: https://stackoverflow.com/a/35966721
-                    // from the way that answer explained it, it seems that the solution below may not be good performance-wise
-                    // this would require more research time, which I do not have right now
-                    // workaround for ASP trying to modify the user id that doesn't exist on the passed model
-                    /* the var keyword means the CLR will automatically figure out the type, which is fine here 
-                     * (I don't think the var keyword was used before in previous labs which is why I am explaining it) */
-                    var entry = _context.Entry(note); 
-
-                    /* specify the fields to update in the database
-                     * only need to update the bound properties specified in 
-                     * the parameters
-                     * since the Id is the primary key, it cannot be updated
-                     */
-                    entry.Property(n => n.Name).IsModified = true;
-                    entry.Property(n => n.Description).IsModified = true;
-                    entry.Property(n => n.Content).IsModified = true;
-                    entry.Property(n => n.GroupId).IsModified = true;
-
-                    // since the properties being modified are specified, no need call update; just save
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!NoteExists(note.Id))
+                    try
                     {
-                        return NotFound();
+                        // so, I had to get some help for this one
+                        // this stackoverflow answer helped me find the solution below: https://stackoverflow.com/a/35966721
+                        // from the way that answer explained it, it seems that the solution below may not be good performance-wise
+                        // this would require more research time, which I do not have right now
+                        // workaround for ASP trying to modify the user id that doesn't exist on the passed model
+                        /* the var keyword means the CLR will automatically figure out the type, which is fine here 
+                         * (I don't think the var keyword was used before in previous labs which is why I am explaining it) */
+                        var entry = _context.Entry(note);
+
+                        /* specify the fields to update in the database
+                         * only need to update the bound properties specified in 
+                         * the parameters
+                         * since the Id is the primary key, it cannot be updated
+                         */
+                        entry.Property(n => n.Name).IsModified = true;
+                        entry.Property(n => n.Description).IsModified = true;
+                        entry.Property(n => n.Content).IsModified = true;
+                        entry.Property(n => n.GroupId).IsModified = true;
+
+                        // since the properties being modified are specified, no need call update; just save
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!NoteExists(note.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", note.GroupId);
+                return View(note);
             }
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", note.GroupId);
-            return View(note);
+            else
+            {
+                // Redirect to an access denied page
+                return Forbid();
+            }
         }
 
         // GET: Notes/Delete/5
+        // need to be logged in, because only the creator can delete
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
+
 
             var note = await _context.Notes
                 .Include(n => n.Group)
@@ -177,19 +236,44 @@ namespace Notes.Controllers
             {
                 return NotFound();
             }
-
-            return View(note);
+            
+            // check if this note is the user's note
+            if (note.UserId.Equals(_userManager.GetUserId(User)))
+            {
+                // note belongs to this user, OK to delete
+                return View(note);
+            }
+            // trying to delete someone else's note
+            else
+            {
+                // Redirect to an error page saying "Access Denied"
+                return Forbid();
+            }
         }
 
         // POST: Notes/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            //TODO: Check User ID
             var note = await _context.Notes.FindAsync(id);
-            _context.Notes.Remove(note);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            // if the note is created by this user...
+            if (note.UserId.Equals(_userManager.GetUserId(User)))
+            {
+                // OK to remove
+                _context.Notes.Remove(note);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            } 
+            else
+            {
+                /* Trying to delete someone else's note; return an access 
+                 * denied error */
+                return Forbid();
+            }
         }
 
         private bool NoteExists(int id)

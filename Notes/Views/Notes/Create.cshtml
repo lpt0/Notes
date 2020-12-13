@@ -33,10 +33,9 @@
             <input asp-for="Description" class="form-control" placeholder="Description (optional)" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
-        <div class="form-group">
-            <label asp-for="UserId" class="control-label">Created by</label>
-            <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-        </div>
+        <!-- Instead of allowing the user to pick a user that created the 
+             note, the backend will check the logged in user and create the 
+             note for that user. -->
         <div class="form-group">
             <label asp-for="GroupId" class="control-label">Group (optional)</label>
             <select asp-for="GroupId" class="form-control" asp-items="ViewBag.GroupId">
