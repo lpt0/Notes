@@ -62,7 +62,12 @@ namespace Notes.Areas.Identity.Pages.Account
                     "Reset Password",
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                return RedirectToPage("./ForgotPasswordConfirmation");
+                //return RedirectToPage("./ForgotPasswordConfirmation");
+
+                /* alternatively, just send the user to the reset page for 
+                 * the specified email, so the password can be reset without 
+                 * email confirmation. */
+                return Redirect(callbackUrl); //TODO
             }
 
             return Page();
