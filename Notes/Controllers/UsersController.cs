@@ -40,17 +40,20 @@ namespace Notes.Controllers
         }
 
         // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // The new ID (inherited from IdentityUser) is a string, not int
+        public async Task<IActionResult> Details(string? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
+            /* get the users (my custom User class, with a relationship to
+             * Notes) */
             var user = await _context.Users
                 .Include(m => m.Notes) // load any notes for this user (if they exist)
                 .ThenInclude(n => n.Group) // and load any groups associated with the notes
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id); // and look for the specific id
             if (user == null)
             {
                 return NotFound();
@@ -59,40 +62,12 @@ namespace Notes.Controllers
             return View(user);
         }
 
-        // GET: Users/Create
-        public IActionResult Create()
-        {
-            // return the Create page
-            return View();
-        }
-
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            /* It seems that, if the model state is *not* valid, ASP does a 
-             * very good job of taking care of that.
-             * Instead of erroring out, it looks like it will redirect the
-             * user back to the page and display an error. This is done 
-             * server-side.
-             * This is on top of the validation scripts included by default,
-             * which also takes care of this on the client-side. 
-             */
-            return View(user);
-        }
+        // No more create route(s); users are created by registering now
 
         // Users cannot be edited or deleted, so those routes have been removed
 
-        private bool UserExists(int id)
+        // User ID is now a string instead of int
+        private bool UserExists(string id)
         {
             return _context.Users.Any(e => e.Id == id);
         }

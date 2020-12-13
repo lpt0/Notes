@@ -13,20 +13,16 @@
 }
 
 <h1>All users</h1>
-<p>Click on a username to be taken to a list of their notes.</p>
+<p>Click on a user to be taken to a list of their notes.</p>
 
-<p>
-    <!-- See Notes/Index.cshtml for reasoning behind placing the button here,
-         and styling it this way -->
-    <a class="btn btn-primary" asp-action="Create">Create</a>
-</p>
+<!-- No more user creation button -->
 <!-- Change colour on hover, like notes table -->
 <table class="table table-hover">
     <!-- Dark header to make the site uniform -->
     <thead class="thead-dark">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Username)
+                User
             </th>
             <th>
                 <!-- Another column for the number of notes -->
@@ -41,7 +37,7 @@
             <td>
                 <!-- Again, username should link to details page -->
                 <a class="table-anchor" asp-controller="Users" asp-action="Details" asp-route-id="@item.Id">
-                    @Html.DisplayFor(modelItem => item.Username)
+                    @Html.DisplayFor(modelItem => item.UserName)
                 </a>
             </td>
             <td>
