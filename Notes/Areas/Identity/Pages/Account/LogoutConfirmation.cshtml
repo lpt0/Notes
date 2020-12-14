@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<User> userManager
+
+@{
+    /** LogoutConfirmation.cshtml
+     * 
+     * A short page, with a form that will log the user out when submitted.
+     * 
+     * Author: Haran
+     * Date: December 13th, 2020
+     */
+    // the UserManager injection above is used to get the user's username
+    ViewData["Title"] = "Are you sure you want to log out?";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    By clicking logout below, you will be signed out of your account, 
+    <strong>@userManager.GetUserName(User)</strong>.
+</p>
+
+<!-- Form that, when submitted, will POST to the Logout endpoint and clear the session -->
+<form asp-area="Identity" asp-page="/Account/Logout" method="POST">
+    <!-- And a sign out button -->
+    <input type="submit" class="btn btn-danger" value="Logout" />
+</form>
+f

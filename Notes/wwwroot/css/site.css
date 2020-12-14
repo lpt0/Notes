@@ -10,7 +10,8 @@ main {
 
 /* Sidebar formatting */
 .sidebar {
-    width: 7%; /* And specify the width of the sidebar (anything bigger will wrap) */
+    width: 10.5%; /* And specify the width of the sidebar (anything bigger will cause a scrollbar to appear ) */
+    max-width: 10.5%;
     padding-left: 0.5%; /* And add a bit of space between the edge of the screen */
     display: flex; /* Use a flexbox for the sidebar */
     flex-direction: column; /* And arrange it as a column (top to bottom) */
@@ -22,6 +23,7 @@ main {
     height: 100%; /* and span the whole height of the display */
     padding-top: 0.25%; /* pad the top a bit to make it loko nicer */
     z-index: 10; /* Place it above other elements (footer) */
+    overflow: auto; /* Show a scrollbar if the content doesn't fit */
 }
 
 /* Lists within the sidebar */
@@ -40,7 +42,7 @@ main {
 }
 
 .sidebar.bg-dark a {
-    color: lightgray; /* Make sidebar links this colour */
+    color: lightgray; /* Make sidebar links and buttons this colour */
 }
 
 .note-content {
@@ -62,7 +64,7 @@ textarea.note-content {
 /* footer styling */
 footer {
     bottom: 0;
-    left: 7%; /* Since the sidebar is 7% in width, offset the footer by this much */
+    left: 10.5%; /* Offset the footer by the width of the sidebar */
     position: fixed; /* Fix the footer to the bottom */
     z-index: 9; /* Below sidebar, above main content */
     width: 100%; /* Size to whole bottom of display */
