@@ -42,6 +42,7 @@ namespace Notes.Controllers
         }
 
         // GET: Notes
+        // Anyone can get the list of notes
         public async Task<IActionResult> Index()
         {
             var applicationContext = _context.Notes.Include(n => n.Group).Include(n => n.User);
@@ -49,6 +50,7 @@ namespace Notes.Controllers
         }
 
         // GET: Notes/Details/5
+        // Anyone can view a note
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

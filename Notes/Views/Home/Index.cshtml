@@ -1,23 +1,48 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<User> userManager
+@inject SignInManager<User> signInManager
+
+@{
     /** Index.cshtml
      *
      * This is the homepage of the application.
      * It explains how the user can get started with this application, and is
      * the first thing that users see when launching the application.
-     * 
+     *
      * Author: Haran
      * Date: December 6th, 2020
      */
+    /* the two inject statements above are used to check if the user is
+       signed in, and if they are, get their username. */
     /* This page gets called by RenderBody (from Shared/_Layout.cshtml) which
-       renders this page, and any code on it (such as setting the title 
+       renders this page, and any code on it (such as setting the title
        below) */
     ViewData["Title"] = "Notes";
 }
 
 <h1>Notes</h1>
-<p>
-    <!-- TODO -->
-    To get started, <a asp-area="Identity" asp-page="/Account/Register">register an account</a>, then, 
-    <a asp-controller="Notes" asp-action="Create">create a note.</a>
-</p>
-<p>You may also want to <a asp-controller="Groups" asp-action="Create">create a group or two</a> to organize your notes.</p>
+@{
+    // if the user isn't logged in, tell them to do so or register
+    if (!signInManager.IsSignedIn(User))
+    {
+        <p>
+            To get started, <a asp-area="Identity" asp-page="/Account/Login">login</a> or
+            <a asp-area="Identity" asp-page="/Account/Register">create an account</a>.
+        </p>
+    }
+    // otherwise, they are signed in
+    else
+    {
+        // show their name and tell them how to start using this app
+        <h4>Hello @userManager.GetUserName(User)!</h4>
+        <p>
+            Get started by <a asp-controller="Notes" asp-action="Create">creating a note.</a>
+        </p>
+        <p>
+            You may also want to <a asp-controller="Groups" asp-action="Create">create a group or two</a> to organize your notes,
+            or <a asp-controller="Notes" asp-action="Index">view all notes</a>, or view the notes of 
+            <a asp-controller="Users" asp-action="Index">other users.</a>
+        </p>
+    }
+}

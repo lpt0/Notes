@@ -32,6 +32,7 @@ namespace Notes.Controllers
         }
 
         // GET: Users
+        // Anyone can view the list of users
         public async Task<IActionResult> Index()
         {
             /* include the notes in the query, so the number of notes created
@@ -41,6 +42,7 @@ namespace Notes.Controllers
 
         // GET: Users/Details/5
         // The new ID (inherited from IdentityUser) is a string, not int
+        // Anyone can view the notes for a user
         public async Task<IActionResult> Details(string? id)
         {
             if (id == null)

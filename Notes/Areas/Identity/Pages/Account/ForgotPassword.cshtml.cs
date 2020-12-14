@@ -57,17 +57,26 @@ namespace Notes.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
+                /* this will not throw if there is no sender;
+                 * it fails silently */
                 await _emailSender.SendEmailAsync(
                     Input.Email,
                     "Reset Password",
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 //return RedirectToPage("./ForgotPasswordConfirmation");
-
+                
                 /* alternatively, just send the user to the reset page for 
                  * the specified email, so the password can be reset without 
-                 * email confirmation. */
-                return Redirect(callbackUrl); //TODO
+                 * email confirmation. 
+                 * THIS SHOULD NOT BE DONE IN PROD.
+                 * For a real application, this is a security risk.
+                 * Since this application is only running on localhost for
+                 * now, this is less of an issue. If this application is 
+                 * deployed to the wider Internet, this should be commented
+                 * out and a mailing should be set up.
+                 */
+                return Redirect(callbackUrl);
             }
 
             return Page();

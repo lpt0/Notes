@@ -59,7 +59,11 @@
             <td>
                 <!-- Since the other buttons are here, might as well have a view button too -->
                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-success">View</a>
-                <!-- Again, consistency; use outline buttons -->
+                <!-- 
+                    Again, consistency; use outline buttons.
+                    Anyone can edit groups, or delete them assuming there are no notes
+                    associated with the group.
+                -->
                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
             </td>

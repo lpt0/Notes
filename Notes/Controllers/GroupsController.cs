@@ -35,12 +35,14 @@ namespace Notes.Controllers
         }
 
         // GET: Groups
+        // Anyone can view groups
         public async Task<IActionResult> Index()
         {
             return View(await _context.Groups.Include(m => m.Notes).ToListAsync());
         }
 
         // GET: Groups/Details/5
+        // Anyone can view notes in a group
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

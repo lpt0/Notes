@@ -50,10 +50,6 @@ namespace Notes.Models
          * the base Users property.
          */
         public override DbSet<User> Users { get; set; }
-        //public override DbSet<User> Users { get; set; } //TODO: can I override it?
-
-        //TODO
-        //public DbSet<UserNote> UserNotes { get; set; }
 
         /* This handles linking the note to the database (since its the only 
          * reference to the Note class */

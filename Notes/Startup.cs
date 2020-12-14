@@ -55,8 +55,13 @@ namespace Notes
         {
             services.AddControllersWithViews();
 
-            services.AddRazorPages(); //TODO
-            services.AddMvc(); //TODO
+            /* The following line is needed for the scaffolded identity pages
+             * to work. This function calls other functions to set up
+             * features for Razor pages, all of which are needed for the 
+             * "areas" feature (which is what the identity pages are 
+             * scaffolded into) to work. */
+            services.AddRazorPages();
+
             // disable endpoint routing; this was an issue upgrading from ASP.Net Core 2.0 to 3.0
             services.AddMvc(options => options.EnableEndpointRouting = false);
 
@@ -83,13 +88,16 @@ namespace Notes
              * That function returns an IdentityBuilder for chaining, and 
              * that is used to add the context that connects all tables used
              * in this application. 
-             * Since the IdentityUser class is oevrriden by User, that has to
-             * be used as the default identity.
+             * Since the IdentityUser class is overridden by User, that has
+             * to be used as the default identity.
              */
             services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationContext>()
                     .AddDefaultTokenProviders()
-                    .AddDefaultUI(); //TODO
+                    /* This is needed for the scaffolded Identity pages to
+                     * work; it enables support for the UI of these pages, 
+                     * as the docstring for the function explains. */
+                    .AddDefaultUI(); 
 
         }
 
@@ -115,7 +123,7 @@ namespace Notes
 
             app.UseRouting();
 
-            app.UseAuthentication(); // needed for Identity
+            app.UseAuthentication(); // needed for Identity framework
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
