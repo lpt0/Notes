@@ -71,6 +71,9 @@
                 <li><a asp-controller="Home" asp-action="About">About</a></li>
             </ul>
 
+            <!-- Include account management functionality items -->
+            <partial name="_LoginPartial.cshtml" />
+
             <!-- Using a heading tag to specify that this is a section -->
             <h6>Notes</h6>
             <ul class="links" id="notes">
@@ -84,7 +87,7 @@
             <h6>Users</h6>
             <ul class="links" id="users">
                 <li><a asp-controller="Users" asp-action="Index">View Users</a></li>
-                <li><a asp-controller="Users" asp-action="Create">Create a User</a></li>
+                <!-- No more user creation link -->
             </ul>
 
             <h6>Groups</h6>
@@ -93,6 +96,11 @@
                 <li><a asp-controller="Groups" asp-action="Create">Create a Group</a></li>
             </ul>
 
+            <!-- Sign out at the bottom;
+                 My preference when using websites is to have the logout 
+                 option the last thing in a nav list. -->
+            <!-- Use the partial view designed to check if the sign out button should be displayed -->
+                <partial name="_LogoutFormPartial.cshtml" />
         </nav>
     </header>
     <div class="container">

@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<User> signInManager
+
+@{ 
+    /** _LogoutFormPartial.cshtml
+     *
+     * This is a simple Razor view that checks if the user is signed in; 
+     * if they are, a button will be displayed that allows the user to logout
+     * by clicking the button.
+     * The reason I have a separate view for this, instead of including it as
+     * part of _LoginPartial is because I want to have control over where the
+     * logout button is placed. By doing it this way, I can just include this
+     * partial view wherever I want within _Layout.cshtml.
+     * The reason I did not implement the form in _Layout.cshtml is because
+     * this form needs to check if the user is signed in; this requires 
+     * SignInManager to be injected, and I did not want this to be injected
+     * in the layout, and site-wide.
+     * 
+     * Author: Haran
+     * Date: December 13th, 2020
+     */
+}
+
+@if (signInManager.IsSignedIn(User))
+{
+    <!-- Have a form with a logout button, so the user can sign out of this session -->
+    <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+        <!-- The colour for the secondary button (Bootstrap) matches the style of my sidebar -->
+        <input type="submit" value="Logout" class="btn btn-secondary" />
+    </form>
+}
+else
+{
+    // no sign out button for users that aren't even signed in
+}
