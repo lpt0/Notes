@@ -31,9 +31,9 @@ namespace Notes.Controllers
         // the context is what allows the controller to communicate with the database
         private readonly ApplicationContext _context;
 
-        /* user manager is required to be able to get details of logged in 
-         * users */
-        private readonly UserManager<User> _userManager; //TODO
+        /* user manager is required to be able to get details of the logged
+         * in user */
+        private readonly UserManager<User> _userManager;
 
         public NotesController(ApplicationContext context, UserManager<User> userManager)
         {
@@ -73,10 +73,8 @@ namespace Notes.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            // populate the group and user select lists
+            // populate the group select list
             ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Username");
-            //TODO: No longer ask the user to select a user that created the note
             return View();
         }
 
@@ -164,10 +162,21 @@ namespace Notes.Controllers
                 return NotFound();
             }
 
-            // check if the logged in user id matches the note's
-            if (note.UserId.Equals(_userManager.GetUserId(User)))
+            // get the original note currently in the database
+            var oldNote = await _context.Notes
+                /* don't track changes made to this model;
+                 * only one item with the same ID can be tracked at a time,
+                 * so this needs to be done to not have the program fatally
+                 * crash */
+                .AsNoTracking() 
+                .FirstOrDefaultAsync(n => n.Id == id);
+            
+            /* since the note retrieved from the DB will have the UserId set,
+             * check if the logged in user id matches that (to check if this
+             * user is allowed to edit this note) */
+            if (oldNote.UserId.Equals(_userManager.GetUserId(User)))
             {
-                // this note is the logged in user's note; OK to edit
+                // this note was created by the logged in user; OK to edit
                 if (ModelState.IsValid)
                 {
                     try
@@ -257,7 +266,6 @@ namespace Notes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            //TODO: Check User ID
             var note = await _context.Notes.FindAsync(id);
 
             // if the note is created by this user...
