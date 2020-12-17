@@ -69,6 +69,9 @@
         }
     }
 
+    <!-- Button that, when clicked, will render the note as GitHub Markdown-->
+    <button class="btn btn-outline-primary" onclick="renderMarkdown()">View as Markdown</button>
+
     <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
     @{ 
         // only show the delete button if the user is allowed to (their note)
@@ -79,3 +82,59 @@
         }
     }
 </div>
+<!-- Markdown container -->
+<div class="markdown-html"></div>
+<!-- Script with API call -->
+<script type="text/javascript">
+    /* Whether the "View as Markdown" button was already clicked or not, and
+     * successfully displayed the HTML conversion of the note's markdown.
+     * If it is clicked, there is no point in running it again since the note
+     * content stays the same under normal circumstances, until the page is 
+     * refreshed. */
+    var renderSuccess = false
+
+    function renderMarkdown() {
+        /* only execute if the button was not already clicked 
+         * (no need to fire the request twice) */
+        if (!renderSuccess) {
+            // the element that will hold the rendered markdown
+            var markdownContainer = document.querySelector("div.markdown-html")
+
+            // grab the contents of the note
+            var noteContent = document.querySelector("pre.note-content").innerText
+
+            /* No preprocessing is needed, since the GitHub API sanitizes any 
+             * potential problem code. For example, if a note contains a script
+             * tag with < and >, GitHub will return it with the angle brackets
+             * replaced by the HTML entities &lt; and &gt;. */
+
+            /* POST to GitHub's markdown renderer, using JQuery
+             * See: https://docs.github.com/en/free-pro-team@latest/rest/reference/markdown#render-a-markdown-document
+             */
+            $.post({
+                "url": "https://api.github.com/markdown",
+                "headers": { "Accept": "application/vnd.github.v3+json" },
+                "data": JSON.stringify({ "text": noteContent })
+            })
+                .done(response => {
+                    // fill the container with the rendered markdown
+                    markdownContainer.innerHTML = response.toString()
+
+                    // Give the container a border to separate it from the rest of the content
+                    markdownContainer.style["border"] = "double"
+
+                    /* Tell the user that this is the markdown preview, by 
+                     * prepending an element describing it */
+                    markdownContainer.outerHTML = "<h6>Markdown Preview</h6>" + markdownContainer.outerHTML
+
+                    // the button has been clicked, and the preview was successful
+                    renderSuccess = true
+                })
+                /* no documented reason for this to fail;
+                 * GitHub doesn't mention returning an error code, but just in 
+                 * case, if there is an error, an alert will be shown. */
+                .fail((data, errorMsg, errorCode) =>
+                    alert(`An error occurred while rendering markdown: ${errorMsg} (Error ${errorCode})`))
+        }
+    }
+</script>
