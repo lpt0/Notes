@@ -183,26 +183,26 @@ namespace Notes.Controllers
                 {
                     try
                     {
-                        // so, I had to get some help for this one
-                        // this stackoverflow answer helped me find the solution below: https://stackoverflow.com/a/35966721
-                        // from the way that answer explained it, it seems that the solution below may not be good performance-wise
-                        // this would require more research time, which I do not have right now
-                        // workaround for ASP trying to modify the user id that doesn't exist on the passed model
-                        /* the var keyword means the CLR will automatically figure out the type, which is fine here 
-                         * (I don't think the var keyword was used before in previous labs which is why I am explaining it) */
-                        var entry = _context.Entry(note);
-
-                        /* specify the fields to update in the database
-                         * only need to update the bound properties specified in 
-                         * the parameters
-                         * since the Id is the primary key, it cannot be updated
+                        /* Have the context start tracking the existing note (if it isn't already)
+                         * By doing this, the entire note does not have to be retrieved; the context
+                         * can just update the fields marked for updating.
+                         * (this answer, and Microsoft Docs, helped me understand it: https://stackoverflow.com/a/35966721)
+                         * Not too important on a small database, but good practice for
+                         * bigger databases.
                          */
+                        _context.Notes.Attach(note);
+
+                        /* Mark the fields to update in the database
+                         * Only need to update the bound properties specified in 
+                         * the parameters
+                         */
+                        var entry = _context.Entry(note);
                         entry.Property(n => n.Name).IsModified = true;
                         entry.Property(n => n.Description).IsModified = true;
                         entry.Property(n => n.Content).IsModified = true;
                         entry.Property(n => n.GroupId).IsModified = true;
 
-                        // since the properties being modified are specified, no need call update; just save
+                        // Have the context save the changes and update the database
                         await _context.SaveChangesAsync();
                     }
                     catch (DbUpdateConcurrencyException)
