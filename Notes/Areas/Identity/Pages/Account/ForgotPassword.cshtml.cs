@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Notes.Models;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace Notes.Areas.Identity.Pages.Account
 {
@@ -57,26 +59,35 @@ namespace Notes.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                /* this will not throw if there is no sender;
-                 * it fails silently */
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                var sendgridAuth = Environment.GetEnvironmentVariable("SG_KEY"); // Get the SendGrid API key
 
-                //return RedirectToPage("./ForgotPasswordConfirmation");
-                
-                /* alternatively, just send the user to the reset page for 
-                 * the specified email, so the password can be reset without 
-                 * email confirmation. 
-                 * THIS SHOULD NOT BE DONE IN PROD.
-                 * For a real application, this is a security risk.
-                 * Since this application is only running on localhost for
-                 * now, this is less of an issue. If this application is 
-                 * deployed to the wider Internet, this should be commented
-                 * out and a mailing should be set up.
-                 */
-                return Redirect(callbackUrl);
+                // Use SendGrid if it's configured
+                if (sendgridAuth != null)
+                {
+
+                    var sgClient = new SendGridClient(
+                        sendgridAuth
+                    );
+
+                    // Create a new email to send with SendGrid
+                    var email = MailHelper.CreateSingleEmail(
+                        new EmailAddress("noreply@notes.2082.ca", "Notes application"),
+                        new EmailAddress(Input.Email),
+                        "Reset Password",
+                        $"Please reset your password by copying and pasting this link into your browser: {callbackUrl}",
+                        $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
+                    );
+
+                    // Send the email, yielding until it does
+                    await sgClient.SendEmailAsync(email);
+
+                    return RedirectToPage("./ForgotPasswordConfirmation");
+                }
+                else
+                {
+                    // Assume the user is who they say they are, and allow them to reset the password
+                    return RedirectToPage(callbackUrl);
+                }
             }
 
             return Page();

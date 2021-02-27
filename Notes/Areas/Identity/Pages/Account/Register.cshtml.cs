@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Notes.Models;
+using SendGrid;
+using SendGrid.Helpers;
+using SendGrid.Helpers.Mail;
 
 namespace Notes.Areas.Identity.Pages.Account
 {
@@ -89,8 +92,26 @@ namespace Notes.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    // If SendGrid is configured, use it
+                    var sendgridAuth = Environment.GetEnvironmentVariable("SG_KEY");
+                    if (sendgridAuth != null)
+                    {
+                        var sgClient = new SendGridClient(
+                            sendgridAuth
+                        );
+
+                        // Create a new email to send with SendGrid
+                        var email = MailHelper.CreateSingleEmail(
+                            new EmailAddress("noreply@notes.2082.ca", "Notes application"),
+                            new EmailAddress(Input.Email),
+                            "Confirm your email",
+                            $"Please confirm your account by copying and pasting this link into your browser: {callbackUrl}",
+                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
+                        );
+
+                        // Send the email, yielding until it does
+                        await sgClient.SendEmailAsync(email);
+                    }
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

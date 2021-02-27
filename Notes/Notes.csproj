@@ -25,6 +25,12 @@
     <Compile Remove="Migrations\20201211022341_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20201211025447_InitialCreate.cs" />
     <Compile Remove="Migrations\20201211025447_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20201215020905_InitialCreate.cs" />
+    <Compile Remove="Migrations\20201215020905_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210227015519_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210227015519_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210303220651_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210303220651_InitialCreate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,10 +44,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
+    <PackageReference Include="SendGrid" Version="9.22.0" />
   </ItemGroup>
 
 </Project>

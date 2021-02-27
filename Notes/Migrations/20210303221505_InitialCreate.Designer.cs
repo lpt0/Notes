@@ -10,7 +10,7 @@ using Notes.Models;
 namespace Notes.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20201215020905_InitialCreate")]
+    [Migration("20210303221505_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
